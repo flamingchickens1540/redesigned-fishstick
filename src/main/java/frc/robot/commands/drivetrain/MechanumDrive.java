@@ -20,27 +20,19 @@ public class MechanumDrive extends CommandBase {
     public void execute() {
         double x = MathUtils.deadzone(driver.getLeftX() * 0.5, 0.1);
         double y = MathUtils.deadzone(driver.getLeftY() * 0.5, 0.1);
+        double z = MathUtils.deadzone(driver.getRightX(), 0.1);
 
-        double theta = Math.atan2(y, x);
-        double radius = Math.hypot(x, y);
-
-        double sin = Math.sin(theta - Math.PI/4);
-        double cos = Math.cos(theta - Math.PI/4);
-        double max = Math.max(sin, cos);
-
-        double rightX = MathUtils.deadzone(driver.getRightX(), 0.1);
-
-        double lF = radius * cos/max + rightX;
-        double rF = radius * sin/max - rightX;
-        double lB = radius * sin/max + rightX;
-        double rB = radius * cos/max - rightX;
+        double lF = y + z + x;
+        double lB = y + z - x;
+        double rF = y - z - x;
+        double rB = y - z + x;
 
         double maxVal = Math.abs(MathUtils.max(lF, rF, lB, rB));
         if(maxVal > 1){
-            lF/= maxVal;
-            rF/= maxVal;
-            lB/= maxVal;
-            rB/= maxVal;
+            lF /= maxVal;
+            rF /= maxVal;
+            lB /= maxVal;
+            rB /= maxVal;
         }
 
        drivetrain.setAllPercent(lF, lB, rF, rB);
