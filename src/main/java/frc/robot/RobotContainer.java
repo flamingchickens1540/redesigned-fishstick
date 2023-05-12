@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.OperatorConstants;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -44,6 +45,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
       drivetrain.setDefaultCommand(new MechanumDrive(drivetrain, driver));
+      driver.a().onTrue(new InstantCommand(drivetrain::resetHeading));
   }
 
   /**

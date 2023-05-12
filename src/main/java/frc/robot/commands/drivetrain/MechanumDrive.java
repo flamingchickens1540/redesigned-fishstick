@@ -1,6 +1,7 @@
 package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.utils.MathUtils;
@@ -18,9 +19,13 @@ public class MechanumDrive extends CommandBase {
 
     @Override
     public void execute() {
-        double x = MathUtils.deadzone(driver.getLeftX() * 0.5, 0.1);
+        double x = -MathUtils.deadzone(driver.getLeftX() * 0.5, 0.1);
         double y = MathUtils.deadzone(driver.getLeftY() * 0.5, 0.1);
-        double z = MathUtils.deadzone(driver.getRightX(), 0.1);
+        double magnitude = Math.hypot(x, y);
+        Rotation2d driveHeading = new Rotation2d(x, y);
+        x = driveHeading.rotateBy(drivetrain.getHeading()).getCos() * magnitude;
+        y = driveHeading.rotateBy(drivetrain.getHeading()).getSin() * magnitude;
+        double z = -MathUtils.deadzone(driver.getRightX(), 0.1);
 
         double lF = y + z + x;
         double lB = y + z - x;
